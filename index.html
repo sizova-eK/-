@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кинотеатр "Звездный"</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Шапка -->
+    <header class="header">
+    <div class="container">
+        <!-- Профиль в правом верхнем углу (отдельно) -->
+        <div class="user-menu">
+            <div id="user-guest" style="display: flex; gap: 10px;">
+                <button class="user-btn" onclick="openLoginModal()">
+                    <i class="fas fa-sign-in-alt"></i> Вход
+                </button>
+                <button class="user-btn" onclick="openRegisterModal()">
+                    <i class="fas fa-user-plus"></i> Регистрация
+                </button>
+            </div>
+            <div id="user-logged" style="display: none;">
+                <div class="user-dropdown">
+                    <button class="user-btn" id="user-menu-btn">
+                        <i class="fas fa-user-circle"></i> 
+                        <span id="user-name">Пользователь</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content" id="user-dropdown-content">
+                        <a onclick="showUserProfile()">
+                            <i class="fas fa-id-card"></i> Мой профиль
+                        </a>
+                        <a onclick="showMyBookings()">
+                            <i class="fas fa-ticket-alt"></i> Мои билеты
+                        </a>
+                        <a onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Выход
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Центральный блок: название и навигация -->
+        <div class="header-center">
+            <h1>Кинотеатр "Звездный"</h1>
+            <nav>
+                <ul>
+                    <li><a href="#now" class="active"><i class="fas fa-film"></i> Сейчас в прокате</a></li>
+                    <li><a href="#schedule"><i class="fas fa-calendar-alt"></i> Расписание сеансов</a></li>
+                    <li><a href="#about"><i class="fas fa-info-circle"></i> О кинотеатре</a></li>
+                    <li><a href="#reviews"><i class="fas fa-comments"></i> Отзывы</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+<!-- ========== МОДАЛЬНЫЕ ОКНА АВТОРИЗАЦИИ ========== -->
+
+<!-- Модальное окно входа -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+        <h2><i class="fas fa-sign-in-alt"></i> Вход в аккаунт</h2>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label for="login-email"><i class="fas fa-envelope"></i> Email *</label>
+                <input type="email" id="login-email" required placeholder="example@mail.ru">
+            </div>
+            
+            <div class="form-group">
+                <label for="login-password"><i class="fas fa-lock"></i> Пароль *</label>
+                <input type="password" id="login-password" required placeholder="********">
+            </div>
+            
+            <div class="form-group">
+                <button type="button" class="forgot-password-btn" onclick="openForgotPasswordModal()">
+                    Забыли пароль?
+                </button>
+            </div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt"></i> Войти
+                </button>
+                <button type="button" class="cancel-btn" onclick="closeLoginModal()">
+                    <i class="fas fa-times-circle"></i> Отмена
+                </button>
+            </div>
+            
+            <div class="form-footer">
+                <p>Нет аккаунта? <button type="button" class="link-btn" onclick="switchToRegister()">Зарегистрироваться</button></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Модальное окно регистрации -->
+<div id="register-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeRegisterModal()">&times;</span>
+        <h2><i class="fas fa-user-plus"></i> Регистрация</h2>
+        
+        <form id="register-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="register-name"><i class="fas fa-user"></i> Имя *</label>
+                    <input type="text" id="register-name" required placeholder="Иван">
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-surname"><i class="fas fa-user"></i> Фамилия *</label>
+                    <input type="text" id="register-surname" required placeholder="Иванов">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="register-email"><i class="fas fa-envelope"></i> Email *</label>
+                <input type="email" id="register-email" required placeholder="example@mail.ru">
+            </div>
+            
+            <div class="form-group">
+                <label for="register-phone"><i class="fas fa-phone"></i> Телефон</label>
+                <input type="tel" id="register-phone" placeholder="+7 (999) 123-45-67">
+            </div>
+            
+            <div class="form-group">
+                <label for="register-password"><i class="fas fa-lock"></i> Пароль *</label>
+                <input type="password" id="register-password" required placeholder="Минимум 6 символов">
+                <small class="password-hint">Пароль должен содержать минимум 6 символов</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="register-confirm-password"><i class="fas fa-lock"></i> Подтверждение пароля *</label>
+                <input type="password" id="register-confirm-password" required placeholder="********">
+            </div>
+            
+            <div class="form-terms">
+                <input type="checkbox" id="register-terms" required>
+                <label for="register-terms">Я принимаю условия пользовательского соглашения</label>
+            </div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-user-plus"></i> Зарегистрироваться
+                </button>
+                <button type="button" class="cancel-btn" onclick="closeRegisterModal()">
+                    <i class="fas fa-times-circle"></i> Отмена
+                </button>
+            </div>
+            
+            <div class="form-footer">
+                <p>Уже есть аккаунт? <button type="button" class="link-btn" onclick="switchToLogin()">Войти</button></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Модальное окно восстановления пароля -->
+<div id="forgot-password-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeForgotPasswordModal()">&times;</span>
+        <h2><i class="fas fa-key"></i> Восстановление пароля</h2>
+        
+        <div class="forgot-info">
+            <p><i class="fas fa-info-circle"></i> Введите email, указанный при регистрации. Мы отправим ссылку для восстановления пароля.</p>
+        </div>
+        
+        <form id="forgot-password-form">
+            <div class="form-group">
+                <label for="reset-email"><i class="fas fa-envelope"></i> Email *</label>
+                <input type="email" id="reset-email" required placeholder="example@mail.ru">
+            </div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Отправить
+                </button>
+                <button type="button" class="cancel-btn" onclick="closeForgotPasswordModal()">
+                    <i class="fas fa-times-circle"></i> Отмена
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Модальное окно профиля -->
+<div id="profile-modal" class="modal">
+    <div class="modal-content profile-modal">
+        <span class="close-modal" onclick="closeProfileModal()">&times;</span>
+        <h2><i class="fas fa-id-card"></i> Мой профиль</h2>
+        <div id="profile-content"></div>
+    </div>
+</div>
+
+<!-- Модальное окно моих билетов -->
+<div id="my-bookings-modal" class="modal">
+    <div class="modal-content bookings-modal">
+        <span class="close-modal" onclick="closeMyBookingsModal()">&times;</span>
+        <h2><i class="fas fa-ticket-alt"></i> Мои билеты и бронирования</h2>
+        <div id="my-bookings-content"></div>
+    </div>
+</div>
+    <div class="container">
+        <!-- Блок фильмов -->
+        <section id="now" class="films-section">
+            <h2>Сейчас в прокате:</h2>
+            <div class="carousel-container">
+                <div class="carousel" id="carousel"></div>
+                <button class="carousel-btn prev" onclick="prevSlide()">❮</button>
+                <button class="carousel-btn next" onclick="nextSlide()">❯</button>
+            </div>
+            <div class="carousel-indicators" id="carousel-indicators"></div>
+        </section>
+
+        <!-- Расписание -->
+        <section id="schedule" class="schedule-section">
+            <h2>Расписание сеансов:</h2>
+            <label id="selected-date-label" for="selected-date">Выберите день:</label>
+            <input type="date" id="selected-date" onchange="updateSchedule()">
+            <div class="table-container">
+                <table id="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Фильм</th>
+                            <th>Время начала</th>
+                            <th>Номер зала</th>
+                            <th>Цена билета</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- О кинотеатре -->
+        <section id="about" class="about-section">
+            <h2>О нашем кинотеатре:</h2>
+            <p>Наш кинотеатр "Звездный" приглашает вас окунуться в атмосферу настоящего киноискусства. Мы заботимся о
+                комфорте наших гостей, предлагая удобные кресла премиум-класса, систему звука Dolby Atmos и огромные
+                экраны 4K Ultra HD. Здесь каждый найдет себе фильм по душе благодаря разнообразному репертуару, включая
+                премьеры мировых хитов, классику кинематографа и семейные фильмы. Наш персонал всегда готов оказать
+                помощь и сделать ваше посещение приятным и незабываемым!</p>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-couch"></i>
+                    <h3>Удобные кресла</h3>
+                    <p>Кресла премиум-класса с регулировкой</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-volume-up"></i>
+                    <h3>Dolby Atmos</h3>
+                    <p>Передовая система объемного звучания</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-ticket-alt"></i>
+                    <h3>Онлайн-бронирование</h3>
+                    <p>Быстрое и удобное бронирование билетов</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Отзывы -->
+        <section id="reviews" class="reviews-section">
+            <h2>Отзывы посетителей:</h2>
+
+            <div class="reviews-header">
+                <div class="reviews-stats">
+                    <div class="rating-overall">
+                        <div class="rating-number">4.8</div>
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="rating-count">На основе 127 отзывов</div>
+                    </div>
+                    <div class="rating-bars">
+                        <div class="rating-bar">
+                            <span>5 звезд</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: 75%"></div>
+                            </div>
+                            <span>75%</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span>4 звезды</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: 18%"></div>
+                            </div>
+                            <span>18%</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span>3 звезды</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: 5%"></div>
+                            </div>
+                            <span>5%</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span>2 звезды</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: 1%"></div>
+                            </div>
+                            <span>1%</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span>1 звезда</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: 1%"></div>
+                            </div>
+                            <span>1%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="add-review-btn" onclick="openReviewForm()">
+                    <i class="fas fa-plus-circle"></i> Оставить отзыв
+                </button>
+            </div>
+
+            <div class="reviews-grid" id="reviews-grid">
+            </div>
+
+            <button class="load-more-btn" onclick="loadMoreReviews()">
+                <i class="fas fa-redo"></i> Показать еще отзывы
+            </button>
+        </section>
+
+        <!-- Подвал страницы -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>© Кинотеатр "Звездный" 2023—2025</p>
+                <p>ул. Кинотеатральная, 15 | +7 (123) 456-78-90 | info@zvezdny.ru</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Кнопка возврата наверх -->
+        <div id="back-to-top-btn-container">
+            <button onclick="scrollToTop()" id="back-to-top-btn">
+                <i class="fas fa-arrow-up"></i> Наверх
+            </button>
+        </div>
+
+        <!-- Окно выбора мест -->
+        <div id="seat-selection-modal" class="modal">
+            <div class="modal-content seat-modal">
+                <span class="close-modal" onclick="closeSeatSelectionModal()">&times;</span>
+                <h2>Выбор мест</h2>
+
+                <div class="seat-selection-info">
+                    <p><strong>Фильм:</strong> <span id="seat-film-title">Название фильма</span></p>
+                    <p><strong>Дата:</strong> <span id="seat-session-date">--.--.----</span></p>
+                    <p><strong>Время:</strong> <span id="seat-session-time">--:--</span></p>
+                    <p><strong>Зал:</strong> <span id="seat-hall-number">--</span></p>
+                    <p><strong>Выбрано мест:</strong> <span id="selected-seats-count">0</span></p>
+                    <p><strong>Стоимость:</strong> <span id="seat-total-price">0 руб.</span></p>
+                </div>
+
+                <div class="seat-progress">
+                    <div class="seat-progress-fill" id="seat-progress-fill"></div>
+                </div>
+
+                <div class="cinema-screen">
+                    <div class="screen-label">ЭКРАН</div>
+                </div>
+
+                <div class="seats-container">
+                    <div id="seats-grid"></div>
+                </div>
+
+                <div class="seat-legend">
+                    <div class="legend-item">
+                        <div class="seat-legend-icon available"></div>
+                        <span>Свободно</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="seat-legend-icon selected"></div>
+                        <span>Выбрано</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="seat-legend-icon occupied"></div>
+                        <span>Занято</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="seat-legend-icon vip"></div>
+                        <span>VIP</span>
+                    </div>
+                </div>
+
+                <div class="selected-seats-list" id="selected-seats-list">
+                    <h4>Выбранные места:</h4>
+                    <div id="selected-seats-items">Не выбрано</div>
+                </div>
+
+                <div class="action-buttons" id="selection-action-buttons">
+                </div>
+            </div>
+        </div>
+
+        <!-- Окно бронирования -->
+        <div id="booking-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeBookingModal()">&times;</span>
+                <h2>Оформление бронирования</h2>
+
+                <div class="booking-info">
+                    <p><strong>Фильм:</strong> <span id="booking-film-title">Название фильма</span></p>
+                    <p><strong>Дата и время:</strong> <span id="booking-session-info">--.--.---- --:--</span></p>
+                    <p><strong>Места:</strong> <span id="booking-seats-info">Не выбрано</span></p>
+                    <p><strong>Стоимость:</strong> <span id="booking-total-price">0 руб.</span></p>
+                </div>
+
+                <form id="booking-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="booking-client-name"><i class="fas fa-user"></i> Ваше имя *</label>
+                            <input type="text" id="booking-client-name" required placeholder="Иван Иванов">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="booking-client-phone"><i class="fas fa-phone"></i> Номер телефона *</label>
+                            <input type="tel" id="booking-client-phone" required placeholder="+7 (999) 123-45-67">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="booking-client-email"><i class="fas fa-envelope"></i> Email *</label>
+                        <input type="email" id="booking-client-email" required placeholder="example@mail.ru">
+                    </div>
+
+                    <div class="form-terms">
+                        <input type="checkbox" id="booking-terms" required>
+                        <label for="booking-terms">Я согласен с правилами бронирования. Бронь действует 30
+                            минут.</label>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-check-circle"></i> Забронировать
+                        </button>
+                        <button type="button" class="cancel-btn" onclick="closeBookingModal()">
+                            <i class="fas fa-times-circle"></i> Отмена
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Окно покупки -->
+        <div id="buy-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeBuyModal()">&times;</span>
+                <h2>Покупка билетов</h2>
+
+                <div class="buy-info">
+                    <p><strong>Фильм:</strong> <span id="buy-film-title">Название фильма</span></p>
+                    <p><strong>Дата и время:</strong> <span id="buy-session-info">--.--.---- --:--</span></p>
+                    <p><strong>Места:</strong> <span id="buy-seats-info">Не выбрано</span></p>
+                    <p><strong>Стоимость:</strong> <span id="buy-total-price">0 руб.</span></p>
+                </div>
+
+                <form id="buy-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="buy-client-name"><i class="fas fa-user"></i> Ваше имя *</label>
+                            <input type="text" id="buy-client-name" required placeholder="Иван Иванов">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="buy-client-phone"><i class="fas fa-phone"></i> Номер телефона *</label>
+                            <input type="tel" id="buy-client-phone" required placeholder="+7 (999) 123-45-67">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buy-client-email"><i class="fas fa-envelope"></i> Email *</label>
+                        <input type="email" id="buy-client-email" required placeholder="example@mail.ru">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-method"><i class="fas fa-credit-card"></i> Способ оплаты *</label>
+                        <select id="payment-method" required>
+                            <option value="">Выберите способ оплаты</option>
+                            <option value="card">Банковская карта</option>
+                            <option value="apple-pay">Apple Pay</option>
+                            <option value="google-pay">Google Pay</option>
+                            <option value="sbp">СБП (Сервис быстрых платежей)</option>
+                        </select>
+                    </div>
+
+                    <div class="card-details" id="card-details">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="card-number">Номер карты *</label>
+                                <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="card-expiry">Срок действия *</label>
+                                <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="card-cvc">CVC/CVV *</label>
+                                <input type="password" id="card-cvc" placeholder="123" maxlength="3">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="card-holder">Имя владельца *</label>
+                                <input type="text" id="card-holder" placeholder="IVAN IVANOV">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-terms">
+                        <input type="checkbox" id="buy-terms" required>
+                        <label for="buy-terms">Я согласен с правилами покупки и возврата билетов</label>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-lock"></i> Оплатить
+                        </button>
+                        <button type="button" class="cancel-btn" onclick="closeBuyModal()">
+                            <i class="fas fa-times-circle"></i> Отмена
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Окно деталей фильма -->
+        <div id="film-details-modal" class="modal">
+            <div class="modal-content film-details-modal">
+                <span class="close-modal" onclick="closeFilmDetailsModal()">&times;</span>
+                <div id="film-details-content"></div>
+            </div>
+        </div>
+
+        <!-- Окно подтверждения -->
+        <div id="confirmation-modal" class="modal confirmation">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeConfirmationModal()">&times;</span>
+                <div class="confirmation-icon">✓</div>
+                <h2 id="confirmation-title">Успешно!</h2>
+                <div id="confirmation-details"></div>
+                <div class="confirmation-number">
+                    <strong>Номер:</strong>
+                    <span id="confirmation-id">#####</span>
+                </div>
+                <p class="confirmation-text" id="confirmation-message">
+                    Информация отправлена на ваш email.
+                </p>
+                <button class="ok-btn" onclick="closeConfirmationModal()">
+                    <i class="fas fa-check"></i> OK
+                </button>
+            </div>
+        </div>
+        <!-- Окно оставления отзыва -->
+        <div id="review-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeReviewModal()">&times;</span>
+                <h2>Оставить отзыв</h2>
+
+                <div class="review-form-info">
+                    <p>Поделитесь своим впечатлением о посещении нашего кинотеатра. Ваш отзыв поможет другим посетителям
+                        сделать правильный выбор.</p>
+                </div>
+
+                <form id="review-form">
+                    <div class="form-group">
+                        <label for="review-author-name"><i class="fas fa-user"></i> Ваше имя *</label>
+                        <input type="text" id="review-author-name" required placeholder="Александр">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review-rating"><i class="fas fa-star"></i> Ваша оценка *</label>
+                        <div class="star-rating">
+                            <div class="stars" id="review-stars">
+                                <i class="far fa-star" data-rating="1"></i>
+                                <i class="far fa-star" data-rating="2"></i>
+                                <i class="far fa-star" data-rating="3"></i>
+                                <i class="far fa-star" data-rating="4"></i>
+                                <i class="far fa-star" data-rating="5"></i>
+                            </div>
+                            <input type="hidden" id="review-rating-value" value="0" required>
+                            <div class="rating-text" id="rating-text">Выберите оценку</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review-film"><i class="fas fa-film"></i> Посмотренный фильм (необязательно)</label>
+                        <select id="review-film">
+                            <option value="">Не выбрано</option>
+                            <option value="Алиса в стране чудес">Алиса в стране чудес</option>
+                            <option value="Эльф и украденное Рождество">Эльф и украденное Рождество</option>
+                            <option value="Иллюзия обмана 3">Иллюзия обмана 3</option>
+                            <option value="Матрица: Воскрешение">Матрица: Воскрешение</option>
+                            <option value="Доктор Стрэндж 2">Доктор Стрэндж 2</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review-text"><i class="fas fa-comment"></i> Текст отзыва *</label>
+                        <textarea id="review-text" rows="6" required
+                            placeholder="Расскажите о вашем опыте посещения кинотеатра..."></textarea>
+                        <div class="char-counter">
+                            <span id="char-count">0</span> / 1000 символов
+                        </div>
+                    </div>
+
+                    <div class="form-terms">
+                        <input type="checkbox" id="review-terms" required>
+                        <label for="review-terms">Я согласен с публикацией отзыва на сайте</label>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Опубликовать отзыв
+                        </button>
+                        <button type="button" class="cancel-btn" onclick="closeReviewModal()">
+                            <i class="fas fa-times-circle"></i> Отмена
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="firebase-auth.js"></script>
+<script type="module" src="script.js"></script>
+<script>
+    // Делаем функции доступными глобально для onclick в HTML
+    window.openLoginModal = function() { document.getElementById('login-modal').classList.add('show'); document.body.style.overflow = 'hidden'; };
+    window.closeLoginModal = function() { document.getElementById('login-modal').classList.remove('show'); document.body.style.overflow = 'auto'; };
+    window.openRegisterModal = function() { document.getElementById('register-modal').classList.add('show'); document.body.style.overflow = 'hidden'; };
+    window.closeRegisterModal = function() { document.getElementById('register-modal').classList.remove('show'); document.body.style.overflow = 'auto'; };
+    window.openForgotPasswordModal = function() { closeLoginModal(); document.getElementById('forgot-password-modal').classList.add('show'); document.body.style.overflow = 'hidden'; };
+    window.closeForgotPasswordModal = function() { document.getElementById('forgot-password-modal').classList.remove('show'); document.body.style.overflow = 'auto'; };
+    window.switchToRegister = function() { closeLoginModal(); openRegisterModal(); };
+    window.switchToLogin = function() { closeRegisterModal(); openLoginModal(); };
+    window.closeProfileModal = function() { document.getElementById('profile-modal').classList.remove('show'); document.body.style.overflow = 'auto'; };
+    window.closeMyBookingsModal = function() { document.getElementById('my-bookings-modal').classList.remove('show'); document.body.style.overflow = 'auto'; };
+    window.showUserProfile = function() { const event = new CustomEvent('showProfile'); window.dispatchEvent(event); };
+    window.showMyBookings = function() { const event = new CustomEvent('showBookings'); window.dispatchEvent(event); };
+    window.logout = function() { const event = new CustomEvent('logout'); window.dispatchEvent(event); };
+    window.openReviewForm = function() { const event = new CustomEvent('openReview'); window.dispatchEvent(event); };
+    window.closeReviewModal = function() { const event = new CustomEvent('closeReview'); window.dispatchEvent(event); };
+    window.toggleLike = function(id) { const event = new CustomEvent('toggleLike', { detail: id }); window.dispatchEvent(event); };
+    window.reportReview = function(id) { const event = new CustomEvent('reportReview', { detail: id }); window.dispatchEvent(event); };
+    window.loadMoreReviews = function() { const event = new CustomEvent('loadMoreReviews'); window.dispatchEvent(event); };
+    window.nextSlide = function() { const event = new CustomEvent('nextSlide'); window.dispatchEvent(event); };
+    window.prevSlide = function() { const event = new CustomEvent('prevSlide'); window.dispatchEvent(event); };
+    window.goToSlide = function(index) { const event = new CustomEvent('goToSlide', { detail: index }); window.dispatchEvent(event); };
+    window.updateSchedule = function() { const event = new CustomEvent('updateSchedule'); window.dispatchEvent(event); };
+    window.scrollToTop = function() { window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    window.closeSeatSelectionModal = function() { const event = new CustomEvent('closeSeatSelection'); window.dispatchEvent(event); };
+    window.closeBookingModal = function() { const event = new CustomEvent('closeBooking'); window.dispatchEvent(event); };
+    window.closeBuyModal = function() { const event = new CustomEvent('closeBuy'); window.dispatchEvent(event); };
+    window.closeFilmDetailsModal = function() { const event = new CustomEvent('closeFilmDetails'); window.dispatchEvent(event); };
+    window.closeConfirmationModal = function() { const event = new CustomEvent('closeConfirmation'); window.dispatchEvent(event); };
+    window.setActionAndProceed = function(action) { const event = new CustomEvent('setAction', { detail: action }); window.dispatchEvent(event); };
+    window.openSeatSelectionForFilm = function(title) { const event = new CustomEvent('openSeatForFilm', { detail: title }); window.dispatchEvent(event); };
+    window.openSeatSelection = function(title, time, hall, price, date, sessionId, hallNumber) { 
+        const event = new CustomEvent('openSeatSelection', { detail: { title, time, hall, price, date, sessionId, hallNumber } }); 
+        window.dispatchEvent(event); 
+    };
+    window.openFilmDetails = function(title) { const event = new CustomEvent('openFilmDetails', { detail: title }); window.dispatchEvent(event); };
+</script>
+    </div>
+    <script type="module" src="firebase-config.js"></script>
+<script type="module" src="firebase-auth.js"></script>
+<script type="module" src="script.js"></script>
+    
+</body>
+
+</html>
