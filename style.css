@@ -797,6 +797,19 @@ body.dropdown-open::before {
     align-items: center;
     flex-wrap: wrap;
 }
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 2px solid rgba(100, 255, 218, 0.2);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    font-family: 'Open Sans', sans-serif;
+    background: rgb(39 58 97);
+    color: #ffffff;
+}
 
 .rating-overall {
     text-align: center;
