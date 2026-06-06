@@ -797,8 +797,24 @@ body.dropdown-open::before {
     align-items: center;
     flex-wrap: wrap;
 }
-.form-group input, 
-.form-group select, 
+/* В секции отзывов (примерно строка 600-610) */
+.reviews-section .form-group input,
+.reviews-section .form-group select,
+.reviews-section .form-group textarea {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 2px solid rgba(100, 255, 218, 0.2);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    font-family: 'Open Sans', sans-serif;
+    background: rgb(39 58 97);
+    color: #ffffff;
+}
+
+/* И такой же код для общих форм (примерно строка 1020-1030) */
+.form-group input,
+.form-group select,
 .form-group textarea {
     width: 100%;
     padding: 0.7rem 1rem;
@@ -807,6 +823,20 @@ body.dropdown-open::before {
     font-size: 0.9rem;
     transition: var(--transition);
     font-family: 'Open Sans', sans-serif;
+    background: rgb(39 58 97);
+    color: #ffffff;
+}
+
+/* Дополнительно - стили для select в модальном окне отзывов */
+#review-modal select,
+#review-modal .form-group select {
+    background: rgb(39 58 97);
+    color: #ffffff;
+    cursor: pointer;
+}
+
+/* Стили для option внутри select */
+#review-modal select option {
     background: rgb(39 58 97);
     color: #ffffff;
 }
