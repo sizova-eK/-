@@ -1,6 +1,7 @@
 /* ========== ОСНОВНЫЕ СТИЛИ ========== */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 
+
 :root {
     --primary-blue: #0a192f;
     --secondary-blue: #112240;
@@ -20,7 +21,21 @@
     --border-radius: 16px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+/* Принудительные стили для всех select */
+select,
+.form-group select,
+#review-form select,
+#review-modal select {
+    background-color: rgb(39 58 97) !important;
+    color: #ffffff !important;
+    border: 2px solid rgba(100, 255, 218, 0.2) !important;
+}
 
+select option,
+#review-form select option {
+    background-color: rgb(39 58 97) !important;
+    color: #ffffff !important;
+}
 * {
     box-sizing: border-box;
     margin: 0;
