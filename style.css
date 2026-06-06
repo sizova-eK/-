@@ -21,7 +21,42 @@
     --border-radius: 16px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-/* Принудительные стили для всех select */
+
+select,
+.form-group select,
+#review-form select,
+#review-modal select,
+#payment-method,
+#buy-form select,
+#booking-form select {
+    background-color: rgb(39 58 97) !important;
+    color: #ffffff !important;
+    border: 2px solid rgba(100, 255, 218, 0.2) !important;
+    border-radius: 10px !important;
+    padding: 0.7rem 1rem !important;
+}
+
+select option,
+#review-form select option,
+#payment-method option,
+#buy-form select option {
+    background-color: rgb(39 58 97) !important;
+    color: #ffffff !important;
+}
+
+.modal select,
+.modal-content select {
+    background-color: rgb(39 58 97) !important;
+    color: #ffffff !important;
+    border: 2px solid rgba(100, 255, 218, 0.2) !important;
+}
+
+.modal select option,
+.modal-content select option {
+    background-color: rgb(39 58 97) !important;
+    color: #ffffff !important;
+}
+
 select,
 .form-group select,
 #review-form select,
